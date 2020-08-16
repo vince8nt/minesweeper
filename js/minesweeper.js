@@ -155,17 +155,36 @@ class Board {
 			}
 		}
 	}
-	ClickLoses(screenX, screenY) { // returns true if the game is lost
+	ClickUncover(screenX, screenY) { // returns true if the game is over
 		var x = Math.floor((screenX - this.leftX) / this.squareWidth);
 		var y = Math.floor((screenY - this.topY) / this.squareHeight);
-		if (x >= 0 && y >= 0 && x < this.squaresX && y < this.squaresY) {
-			this.covered[x][y] = 0;
-			this.numCovered--;
-			this.Draw();
-			if (this.squareValue[x][y] == -1)
+		if (x >= 0 && y >= 0 && x < this.squaresX && y < this.squaresY && this.covered[x][y] == 1) {
+			if (this.squareValue[x][y] == -1) { // lose game
+				this.covered[x][y] = 0;
+				this.numCovered--;
+				this.Draw();
 				return true;
+			}
+			this.RecurUncover(x, y);
+			this.Draw();
 		}
 		return false;
+	}
+	RecurUncover(x, y) {
+		if (x >= 0 && y >= 0 && x < this.squaresX && y < this.squaresY && this.covered[x][y] == 1) {
+			this.covered[x][y] = 0;
+			this.numCovered--;
+			if (this.squareValue[x][y] == 0) {
+				this.RecurUncover(x - 1, y - 1);
+				this.RecurUncover(x, y - 1);
+				this.RecurUncover(x + 1, y - 1);
+				this.RecurUncover(x - 1, y);
+				this.RecurUncover(x + 1, y);
+				this.RecurUncover(x - 1, y + 1);
+				this.RecurUncover(x, y + 1);
+				this.RecurUncover(x + 1, y + 1);
+			}
+		}
 	}
 	ClickFlag(screenX, screenY) {
 		var x = Math.floor((screenX - this.leftX) / this.squareWidth);
@@ -189,7 +208,7 @@ myBoard = new Board(18, 8, 50, 50, 900, 400);
 c.addEventListener('click', function(event) { // left click
 	var screenX = event.pageX - c.offsetLeft - c.clientLeft;
     var screenY = event.pageY - c.offsetTop - c.clientTop;
-    if (myBoard.ClickLoses(screenX, screenY)) {
+    if (myBoard.ClickUncover(screenX, screenY)) {
     	console.log("game over.");
     }
 }, false);
