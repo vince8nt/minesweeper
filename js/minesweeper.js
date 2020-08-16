@@ -160,9 +160,7 @@ class Board {
 		var y = Math.floor((screenY - this.topY) / this.squareHeight);
 		if (x >= 0 && y >= 0 && x < this.squaresX && y < this.squaresY && this.covered[x][y] == 1) {
 			if (this.squareValue[x][y] == -1) { // lose game
-				this.covered[x][y] = 0;
-				this.numCovered--;
-				this.Draw();
+				this.UncoverMines();
 				return true;
 			}
 			this.RecurUncover(x, y);
@@ -186,6 +184,20 @@ class Board {
 			}
 		}
 	}
+	UncoverMines() {
+		for (var x = 0; x < this.squaresX; x++) {
+			for (var y = 0; y < this.squaresY; y++) {
+				if (this.squareValue[x][y] == -1 ) {
+					this.covered[x][y] = 0;
+				}
+				else if (this.covered[x][y] == 2) {
+					this.covered[x][y] = 0;
+					this.squareValue[x][y] = -2;
+				}
+			}
+		}
+		this.Draw();
+	}
 	ClickFlag(screenX, screenY) {
 		var x = Math.floor((screenX - this.leftX) / this.squareWidth);
 		var y = Math.floor((screenY - this.topY) / this.squareHeight);
@@ -204,16 +216,22 @@ class Board {
 
 // myBoard = new Board(36, 16, 50, 50, 900, 400);
 myBoard = new Board(18, 8, 50, 50, 900, 400);
+var gameOver = false;
 
 c.addEventListener('click', function(event) { // left click
+	if (gameOver)
+		return;
 	var screenX = event.pageX - c.offsetLeft - c.clientLeft;
     var screenY = event.pageY - c.offsetTop - c.clientTop;
     if (myBoard.ClickUncover(screenX, screenY)) {
     	console.log("game over.");
+    	gameOver = true;
     }
 }, false);
 
 c.addEventListener('contextmenu', function(event) {
+	if (gameOver)
+		return;
 	event.preventDefault();
 	var screenX = event.pageX - c.offsetLeft - c.clientLeft;
     var screenY = event.pageY - c.offsetTop - c.clientTop;
