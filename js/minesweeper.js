@@ -161,10 +161,15 @@ class Board {
 		if (x >= 0 && y >= 0 && x < this.squaresX && y < this.squaresY && this.covered[x][y] == 1) {
 			if (this.squareValue[x][y] == -1) { // lose game
 				this.UncoverMines();
+				setTimeout(function(){ alert("You Lose"); }, 0);
 				return true;
 			}
 			this.RecurUncover(x, y);
 			this.Draw();
+			if (this.numCovered <= this.numOfMines) {
+				setTimeout(function(){ alert("You Win"); }, 0);
+				return true;
+			}
 		}
 		return false;
 	}
