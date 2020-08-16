@@ -219,8 +219,8 @@ class Board {
 	}
 }
 
-// myBoard = new Board(36, 16, 50, 50, 900, 400);
-myBoard = new Board(18, 8, 50, 50, 900, 400);
+myBoard = new Board(36, 16, 50, 50, 900, 400);
+// myBoard = new Board(18, 8, 50, 50, 900, 400);
 var gameOver = false;
 
 c.addEventListener('click', function(event) { // left click
