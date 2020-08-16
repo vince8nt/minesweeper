@@ -1,6 +1,7 @@
 var c = document.getElementById("msContainer");
 var ctx = c.getContext("2d");
 var mine = document.getElementById("mine");
+var flag = document.getElementById("flag");
 
 class Board {
 	constructor(squaresX, squaresY, leftX, topY, width, height) {
@@ -13,6 +14,7 @@ class Board {
 		this.height = height
 		this.squareWidth = width / squaresX;
 		this.squareHeight = height / squaresY;
+		this.numCovered = squaresX * squaresY;
 		console.log("square width: " + this.squareWidth);
 		console.log("square height: " + this.squareHeight);
 		this.PlaceBombs(1);
@@ -66,7 +68,7 @@ class Board {
 		for (var x = 0; x < this.squaresX; x++) {
 			var tempCol = [];
 			for (var y = 0; y < this.squaresY; y++) {
-				tempCol.push(true);
+				tempCol.push(1);
 			}
 			this.covered.push(tempCol);
 		}
@@ -101,7 +103,7 @@ class Board {
 		ctx.font = "20px Arial"; // squares
 		for (var x = 0; x < this.squaresX; x++) {
 			for (var y = 0; y < this.squaresY; y++) {
-				if (this.covered[x][y]) { // draw cover
+				if (this.covered[x][y] != 0) { // draw cover
 					var screenX = this.leftX + this.squareWidth * x;
 					var screenY = this.topY + this.squareHeight * y;
 					ctx.strokeStyle = "#F0F0F0";
@@ -119,6 +121,11 @@ class Board {
 					ctx.moveTo(screenX + this.squareWidth - 1.5, screenY + this.squareHeight);
 					ctx.lineTo(screenX + this.squareWidth - 1.5, screenY);
 					ctx.stroke();
+					if (this.covered[x][y] == 2) { // draw flag
+						var screenX = this.leftX + this.squareWidth * (x + 0.5) - 8.5;
+						var screenY = this.topY + this.squareHeight * (y + 0.5) - 8.5;
+						ctx.drawImage(flag, screenX, screenY);
+					}
 				}
 				else {
 					if (this.squareValue[x][y] > 0) { // draw number
@@ -128,8 +135,8 @@ class Board {
 						ctx.fillText(this.squareValue[x][y], screenX, screenY);
 					}
 					else if (this.squareValue[x][y] == -1) { // change to draw bomb picture
-						var screenX = this.leftX + this.squareWidth * (x + 0.5) - 7;
-						var screenY = this.topY + this.squareHeight * (y + 0.5) - 7;
+						var screenX = this.leftX + this.squareWidth * (x + 0.5) - 6.5;
+						var screenY = this.topY + this.squareHeight * (y + 0.5) - 6.5;
 						ctx.drawImage(mine, screenX, screenY);
 					}
 				}
@@ -140,25 +147,45 @@ class Board {
 		var x = Math.floor((screenX - this.leftX) / this.squareWidth);
 		var y = Math.floor((screenY - this.topY) / this.squareHeight);
 		if (x >= 0 && y >= 0 && x < this.squaresX && y < this.squaresY) {
-			this.covered[x][y] = false;
+			this.covered[x][y] = 0;
+			this.numCovered--;
 			this.Draw();
 			if (this.squareValue[x][y] == -1)
 				return true;
 		}
 		return false;
 	}
+	ClickFlag(screenX, screenY) {
+		var x = Math.floor((screenX - this.leftX) / this.squareWidth);
+		var y = Math.floor((screenY - this.topY) / this.squareHeight);
+		if (x >= 0 && y >= 0 && x < this.squaresX && y < this.squaresY) {
+			if (this.covered[x][y] == 1) {
+				this.covered[x][y] = 2;
+				this.Draw();
+			}
+			else if (this.covered[x][y] == 2) {
+				this.covered[x][y] = 1;
+				this.Draw();
+			}
+		}
+	}
 }
 
 myBoard = new Board(36, 16, 50, 50, 900, 400);
 
-
-c.addEventListener('click', function(event) {
+c.addEventListener('click', function(event) { // left click
 	var screenX = event.pageX - c.offsetLeft - c.clientLeft;
     var screenY = event.pageY - c.offsetTop - c.clientTop;
     myBoard.ClickLoses(screenX, screenY);
 }, false);
 
-
+c.addEventListener('contextmenu', function(event) {
+	event.preventDefault();
+	var screenX = event.pageX - c.offsetLeft - c.clientLeft;
+    var screenY = event.pageY - c.offsetTop - c.clientTop;
+    myBoard.ClickFlag(screenX, screenY);
+    return false;
+}, false);
 
 
 
