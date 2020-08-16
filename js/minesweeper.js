@@ -22,20 +22,20 @@ class Board {
 	}
 	PlaceBombs(diff) { // diff should range from 1 to 5
 		this.squareValue = [];
-		var numOfMines = 0;
+		this.numOfMines = 0;
 		for (var x = 0; x < this.squaresX; x++) {
 			var tempCol = [];
 			for (var y = 0; y < this.squaresY; y++) {
 				if (Math.random() * (25 + diff) > 23) {
 					tempCol.push(-1);
-					numOfMines++;
+					this.numOfMines++;
 				}
 				else
 					tempCol.push(0);
 			}
 			this.squareValue.push(tempCol);
 		}
-		console.log(numOfMines + " mines placed.");
+		console.log(this.numOfMines + " mines placed.");
 	}
 	CreateNums() {
 		for (var x = 0; x < this.squaresX; x++) {
@@ -136,7 +136,7 @@ class Board {
 			}
 		}
 	}
-	ClickLoses(screenX, screenY) {
+	ClickLoses(screenX, screenY) { // returns true if the game is lost
 		var x = Math.floor((screenX - this.leftX) / this.squareWidth);
 		var y = Math.floor((screenY - this.topY) / this.squareHeight);
 		if (x >= 0 && y >= 0 && x < this.squaresX && y < this.squaresY) {
@@ -150,7 +150,13 @@ class Board {
 }
 
 myBoard = new Board(36, 16, 50, 50, 900, 400);
-myBoard.ClickLoses(500, 200);
+
+
+c.addEventListener('click', function(event) {
+	var screenX = event.pageX - c.offsetLeft - c.clientLeft;
+    var screenY = event.pageY - c.offsetTop - c.clientTop;
+    myBoard.ClickLoses(screenX, screenY);
+}, false);
 
 
 
