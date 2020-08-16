@@ -134,10 +134,22 @@ class Board {
 						ctx.fillStyle = this.numColors[this.squareValue[x][y]];
 						ctx.fillText(this.squareValue[x][y], screenX, screenY);
 					}
-					else if (this.squareValue[x][y] == -1) { // change to draw bomb picture
+					else if (this.squareValue[x][y] < 0) { // change to draw bomb picture
 						var screenX = this.leftX + this.squareWidth * (x + 0.5) - 6.5;
 						var screenY = this.topY + this.squareHeight * (y + 0.5) - 6.5;
 						ctx.drawImage(mine, screenX, screenY);
+						if (this.squareValue[x][y] == -2) { // draw red X
+							screenX += 6.5;
+							screenY += 6.5;
+							ctx.strokeStyle = "#FF0000";
+							ctx.lineWidth = 2;
+							ctx.beginPath();
+							ctx.moveTo(screenX - 10, screenY - 10);
+							ctx.lineTo(screenX + 10, screenY + 10);
+							ctx.moveTo(screenX - 10, screenY + 10);
+							ctx.lineTo(screenX + 10, screenY - 10);
+							ctx.stroke();
+						}
 					}
 				}
 			}
@@ -171,12 +183,15 @@ class Board {
 	}
 }
 
-myBoard = new Board(36, 16, 50, 50, 900, 400);
+// myBoard = new Board(36, 16, 50, 50, 900, 400);
+myBoard = new Board(18, 8, 50, 50, 900, 400);
 
 c.addEventListener('click', function(event) { // left click
 	var screenX = event.pageX - c.offsetLeft - c.clientLeft;
     var screenY = event.pageY - c.offsetTop - c.clientTop;
-    myBoard.ClickLoses(screenX, screenY);
+    if (myBoard.ClickLoses(screenX, screenY)) {
+    	console.log("game over.");
+    }
 }, false);
 
 c.addEventListener('contextmenu', function(event) {
