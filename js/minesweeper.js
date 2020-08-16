@@ -1,8 +1,8 @@
 var c = document.getElementById("msContainer");
 var ctx = c.getContext("2d");
+var mine = document.getElementById("mine");
 
 class Board {
-
 	constructor(squaresX, squaresY, leftX, topY, width, height) {
 		this.numColors = ["#000000", "#0000FF", "#20B000", "#FF0000", "#B000B0", "#B01010", "#40E0D0", "#000000", "#606060"];
 		this.squaresX = squaresX;
@@ -129,16 +129,15 @@ class Board {
 					}
 					else if (this.squareValue[x][y] == -1) { // change to draw bomb picture
 						var screenX = this.leftX + this.squareWidth * (x + 0.5) - 7;
-						var screenY = this.topY + this.squareHeight * (y + 0.5) + 8.5;
-						ctx.fillStyle = "#404040";
-						ctx.fillText("B", screenX, screenY);
+						var screenY = this.topY + this.squareHeight * (y + 0.5) - 7;
+						ctx.drawImage(mine, screenX, screenY);
 					}
 				}
 			}
 		}
 	}
 	ClickLoses(screenX, screenY) {
-		
+
 	}
 }
 
