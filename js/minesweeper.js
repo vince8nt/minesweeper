@@ -70,6 +70,9 @@ class Board {
 			this.covered.push(tempCol);
 		}
 	}
+	Clear() {
+		ctx.clearRect(this.leftX - 2, this.topY - 2, this.width + 4, this.height + 4);
+	}
 	Draw() {
 		ctx.fillStyle = "#C8C8C8";
 		ctx.fillRect(this.leftX, this.topY, this.width, this.height);
@@ -158,13 +161,19 @@ class Board {
 		if (x >= 0 && y >= 0 && x < this.squaresX && y < this.squaresY && this.covered[x][y] == 1) {
 			if (this.squareValue[x][y] == -1) { // lose game
 				this.UncoverMines();
-				setTimeout(function(){ alert("You Lose"); }, 0);
+				setTimeout(function(){
+					alert("You Lose");
+					myBoard.Clear();
+				}, 0);
 				return true;
 			}
 			this.RecurUncover(x, y);
 			this.Draw();
 			if (this.numCovered <= this.numOfMines) {
-				setTimeout(function(){ alert("You Win"); }, 0);
+				setTimeout(function(){
+					alert("You Win");
+					myBoard.Clear();
+				}, 0);
 				return true;
 			}
 		}
