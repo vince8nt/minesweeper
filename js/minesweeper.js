@@ -4,19 +4,16 @@ var mine = document.getElementById("mine");
 var flag = document.getElementById("flag");
 
 class Board {
-	constructor(squaresX, squaresY, leftX, topY, width, height) {
+	constructor(squaresX, squaresY, leftX, topY, squareSize) {
 		this.numColors = ["#000000", "#0000FF", "#20B000", "#FF0000", "#B000B0", "#B01010", "#40E0D0", "#000000", "#606060"];
 		this.squaresX = squaresX;
 		this.squaresY = squaresY;
 		this.leftX = leftX;
 		this.topY = topY;
-		this.width = width;
-		this.height = height
-		this.squareWidth = width / squaresX;
-		this.squareHeight = height / squaresY;
+		this.width = squaresX * squareSize;
+		this.height = squaresY * squareSize;
+		this.squareSize = squareSize;
 		this.numCovered = squaresX * squaresY;
-		console.log("square width: " + this.squareWidth);
-		console.log("square height: " + this.squareHeight);
 		this.PlaceBombs(1);
 		this.CreateNums();
 		this.MakeCover();
@@ -91,12 +88,12 @@ class Board {
 		ctx.lineWidth = 1;
 		ctx.beginPath();
 		for (var y = 1; y < this.squaresY; y++) {
-			ctx.moveTo(this.leftX, this.topY + this.squareHeight * y - 0.5);
-        	ctx.lineTo(this.leftX + this.width, this.topY + this.squareHeight * y - 0.5);
+			ctx.moveTo(this.leftX, this.topY + this.squareSize * y - 0.5);
+        	ctx.lineTo(this.leftX + this.width, this.topY + this.squareSize * y - 0.5);
 		}
 		for (var x = 1; x < this.squaresX; x++) {
-			ctx.moveTo(this.leftX + this.squareWidth * x - 0.5, this.topY);
-        	ctx.lineTo(this.leftX + this.squareWidth * x - 0.5, this.topY + this.height);
+			ctx.moveTo(this.leftX + this.squareSize * x - 0.5, this.topY);
+        	ctx.lineTo(this.leftX + this.squareSize * x - 0.5, this.topY + this.height);
 		}
 		ctx.stroke();
 
@@ -104,39 +101,39 @@ class Board {
 		for (var x = 0; x < this.squaresX; x++) {
 			for (var y = 0; y < this.squaresY; y++) {
 				if (this.covered[x][y] != 0) { // draw cover
-					var screenX = this.leftX + this.squareWidth * x;
-					var screenY = this.topY + this.squareHeight * y;
+					var screenX = this.leftX + this.squareSize * x;
+					var screenY = this.topY + this.squareSize * y;
 					ctx.strokeStyle = "#F0F0F0";
 					ctx.lineWidth = 3;
 					ctx.beginPath();
 					ctx.moveTo(screenX, screenY + 1.5);
-					ctx.lineTo(screenX + this.squareWidth, screenY + 1.5);
+					ctx.lineTo(screenX + this.squareSize, screenY + 1.5);
 					ctx.moveTo(screenX + 1.5, screenY);
-					ctx.lineTo(screenX + 1.5, screenY + this.squareHeight);
+					ctx.lineTo(screenX + 1.5, screenY + this.squareSize);
 					ctx.stroke();
 					ctx.strokeStyle = "#808080";
 					ctx.beginPath();
-					ctx.moveTo(screenX + this.squareWidth, screenY + this.squareHeight - 1.5);
-					ctx.lineTo(screenX, screenY + this.squareHeight - 1.5);
-					ctx.moveTo(screenX + this.squareWidth - 1.5, screenY + this.squareHeight);
-					ctx.lineTo(screenX + this.squareWidth - 1.5, screenY);
+					ctx.moveTo(screenX + this.squareSize, screenY + this.squareSize - 1.5);
+					ctx.lineTo(screenX, screenY + this.squareSize - 1.5);
+					ctx.moveTo(screenX + this.squareSize - 1.5, screenY + this.squareSize);
+					ctx.lineTo(screenX + this.squareSize - 1.5, screenY);
 					ctx.stroke();
 					if (this.covered[x][y] == 2) { // draw flag
-						var screenX = this.leftX + this.squareWidth * (x + 0.5) - 8.5;
-						var screenY = this.topY + this.squareHeight * (y + 0.5) - 8.5;
+						var screenX = this.leftX + this.squareSize * (x + 0.5) - 8.5;
+						var screenY = this.topY + this.squareSize * (y + 0.5) - 8.5;
 						ctx.drawImage(flag, screenX, screenY);
 					}
 				}
 				else {
 					if (this.squareValue[x][y] > 0) { // draw number
-						var screenX = this.leftX + this.squareWidth * (x + 0.5) - 7;
-						var screenY = this.topY + this.squareHeight * (y + 0.5) + 8.5;
+						var screenX = this.leftX + this.squareSize * (x + 0.5) - 7;
+						var screenY = this.topY + this.squareSize * (y + 0.5) + 8.5;
 						ctx.fillStyle = this.numColors[this.squareValue[x][y]];
 						ctx.fillText(this.squareValue[x][y], screenX, screenY);
 					}
 					else if (this.squareValue[x][y] < 0) { // change to draw bomb picture
-						var screenX = this.leftX + this.squareWidth * (x + 0.5) - 6.5;
-						var screenY = this.topY + this.squareHeight * (y + 0.5) - 6.5;
+						var screenX = this.leftX + this.squareSize * (x + 0.5) - 6.5;
+						var screenY = this.topY + this.squareSize * (y + 0.5) - 6.5;
 						ctx.drawImage(mine, screenX, screenY);
 						if (this.squareValue[x][y] == -2) { // draw red X
 							screenX += 6.5;
@@ -156,8 +153,8 @@ class Board {
 		}
 	}
 	ClickUncover(screenX, screenY) { // returns true if the game is over
-		var x = Math.floor((screenX - this.leftX) / this.squareWidth);
-		var y = Math.floor((screenY - this.topY) / this.squareHeight);
+		var x = Math.floor((screenX - this.leftX) / this.squareSize);
+		var y = Math.floor((screenY - this.topY) / this.squareSize);
 		if (x >= 0 && y >= 0 && x < this.squaresX && y < this.squaresY && this.covered[x][y] == 1) {
 			if (this.squareValue[x][y] == -1) { // lose game
 				this.UncoverMines();
@@ -204,8 +201,8 @@ class Board {
 		this.Draw();
 	}
 	ClickFlag(screenX, screenY) {
-		var x = Math.floor((screenX - this.leftX) / this.squareWidth);
-		var y = Math.floor((screenY - this.topY) / this.squareHeight);
+		var x = Math.floor((screenX - this.leftX) / this.squareSize);
+		var y = Math.floor((screenY - this.topY) / this.squareSize);
 		if (x >= 0 && y >= 0 && x < this.squaresX && y < this.squaresY) {
 			if (this.covered[x][y] == 1) {
 				this.covered[x][y] = 2;
@@ -219,19 +216,21 @@ class Board {
 	}
 }
 
-myBoard = new Board(36, 16, 50, 50, 900, 400);
-// myBoard = new Board(18, 8, 50, 50, 900, 400);
+myBoard = new Board(36, 16, 50, 50, 25);
+// myBoard = new Board(18, 8, 50, 50, 50);
 var gameOver = false;
 
 c.addEventListener('click', function(event) { // left click
 	if (gameOver)
 		return;
+	event.preventDefault();
 	var screenX = event.pageX - c.offsetLeft - c.clientLeft;
     var screenY = event.pageY - c.offsetTop - c.clientTop;
     if (myBoard.ClickUncover(screenX, screenY)) {
     	console.log("game over.");
     	gameOver = true;
     }
+    return false;
 }, false);
 
 c.addEventListener('contextmenu', function(event) {
