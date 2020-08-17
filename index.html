@@ -2,16 +2,62 @@
 <html>
 	<head>
 		<title>Minesweeper</title>
+		<style>
+			body {
+				background-color: black;
+				background-image: url("images/clouds.svg");
+				background-size: 100%;
+				background-repeat: no-repeat;
+				margin: 0px;
+				color: #30D020;
+				font-family: Arial;
+			}
+			.myButton {
+				width: auto;
+				padding: 8px;
+				border: solid #30D020 2px;
+				border-radius: 8px;
+				background-color: #30D020;
+				color: #000000;
+				text-decoration: none;
+				transition: all 0.2s;
+
+			}
+			.myButton:hover {
+				background-color: #000000;
+				color: #30D020;
+			}
+		</style>
 	</head>
-	<body style = "background-color: lightblue;">
-		<center>
-			<h1>Minesweeper</h1>
-			<img id="mine" style="width: 13; height: 13;" src="images/mine.png" alt="Mine">
-			<img id="flag" style="width: 16; height: 16;" src="images/flag.png" alt="Mine">
-			<h2>by Vincent Titterton</h2>
-			<canvas id = "msContainer" width = "1000" height = "600" style = "background-color: white;">
-			</canvas>
-		</center>
+	<body>
+		<div style="margin: 5px; margin-top: 30px;">
+			<a class="myButton" style="margin-left: 40px; font-family: Arial Black;" href="https://vince8nt.github.io/">Home</a>
+			<center>
+				<h1 style="font-family: Arial Black; color: white;">Minesweeper</h1>
+				<div style="background-color: white; border-radius: 4px; width: 50px; padding: 5px;">
+					<img id="mine" style="width: 13; height: 13;" src="images/mine.png" alt="Mine">
+					<img id="flag" style="width: 16; height: 16;" src="images/flag.png" alt="Mine">
+				</div>
+				<h2 style="font-family: Arial Black;">by Vincent Titterton</h2>
+				<canvas id="msContainer" width="1000" height="600" style="background-color: white;">
+				</canvas>
+				<div>
+					<h2 style="font-family: Arial Black;">About this project</h2>
+					<a class="myButton" href="https://github.com/vince8nt/minesweeper" target="_blank">Source Code</a>
+				</div>
+			</center>
+		</div>
+		
 		<script src="js/minesweeper.js"></script>
 	</body>
 </html>
+
+
+
+
+
+
+
+
+
+
