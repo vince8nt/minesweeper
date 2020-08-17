@@ -3,6 +3,51 @@ var ctx = c.getContext("2d");
 var mine = document.getElementById("mine");
 var flag = document.getElementById("flag");
 
+class Button {
+	constructor(x, y, width, height, label, color, border) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.label = label;
+		this.color = color;
+		this.border = border;
+		this.Draw();
+	}
+	Draw() {
+		ctx.fillStyle = this.border;
+		ctx.fillRect(this.x, this.y, this.width, this.height);
+		ctx.fillStyle = this.color;
+		ctx.fillRect(this.x + 5, this.y + 5, this.width - 10, this.height - 10);
+		ctx.fillStyle = "#000000";
+		ctx.fillText(this.label, this.x + 10, this.y + this.height / 2 + 5);
+	}
+	SetBorder(border) {
+		this.border = border;
+		this.Draw();
+	}
+	SetColor(color) {
+		this.color = color;
+		this.Draw();
+	}
+	SetLabel(label) {
+		this.label = label;
+		this.Draw();
+	}
+	GetLabel() {
+		return this.label;
+	}
+	Clicked(pointerX, pointerY) {
+		if (pointerX < this.x || this.x + this.width < pointerX) {
+			return false;
+		}
+		if (pointerY < this.y || this.y + this.height < pointerY) {
+			return false;
+		}
+		return true;
+	}	
+}
+
 class Board {
 	constructor(squaresX, squaresY, leftX, topY, squareSize) {
 		this.numColors = ["#000000", "#0000FF", "#20B000", "#FF0000", "#B000B0", "#B01010", "#40E0D0", "#000000", "#606060"];
