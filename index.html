@@ -14,7 +14,7 @@
 			}
 			.myButton {
 				width: auto;
-				padding: 8px;
+				padding: 4px;
 				border: solid #30D020 2px;
 				border-radius: 8px;
 				background-color: #30D020;
@@ -41,13 +41,30 @@
 				<h2 style="font-family: Arial Black;">by Vincent Titterton</h2>
 				<canvas id="msContainer" width="1000" height="600" style="background-color: white;">
 				</canvas>
-				<div>
-					<h2 style="font-family: Arial Black;">About this project</h2>
+				
+				<h2 style="font-family: Arial Black;">About this project</h2>
+				<div style="border: solid #30D020 4px; border-radius: 8px; width: 600px; padding: 20px; background-color: #D8D8D8;">
 					<a class="myButton" href="https://github.com/vince8nt/minesweeper" target="_blank">Source Code</a>
+					<div style="text-align: left; color: black; margin-top: 8px;">
+						<a>Language: JavaScript <br> Framework: HTML Canvas</a>
+						<p>Classic Minesweeper coded in JavaScript. Features a board of adjustable size with an adjustable number of tiles. Takes inputs from left and right click. Recursive algorithm used to discover adjacent tiles when a non-number, non-mine tile is uncovered.</p>
+					</div>
+					<hr>
+					<a style="font-family: Arial Black; color: #381bff;">Try my other JavaScript Projects:</a>
+					<br>
+					<br>
+					<a class="myButton" href="https://vince8nt.github.io/sorter/">Sorter</a>
+					<a class="myButton" href="https://vince8nt.github.io/Path-Finder/">Path Finder</a>
 				</div>
+				
 			</center>
 		</div>
-		
+
+		<!-- footer -->
+		<div style = "width: fill; border-top: solid #30D020 4px; border-left: 0px; background-color: #381bff; padding: 25px; margin-top: 60px;">
+			<a style = "color: white; font-family: Arial Black;">© 2020 Vincent Titterton.</a>
+		</div>
+
 		<script src="js/minesweeper.js"></script>
 	</body>
 </html>
