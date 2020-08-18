@@ -22,6 +22,9 @@ class Button {
 		ctx.fillStyle = "#000000";
 		ctx.fillText(this.label, this.x + 10, this.y + this.height / 2 + 5);
 	}
+	Clear() {
+		ctx.clearRect(this.x, this.y, this.width, this.height);
+	}
 	SetBorder(border) {
 		this.border = border;
 		this.Draw();
@@ -80,6 +83,16 @@ class Selector {
 			}
 		}
 		return false;
+	}
+	Draw () {
+		for (var i = 0; i < this.buttons.length; i++) {
+			this.buttons[i].Draw();
+		}
+	}
+	Clear () {
+		for (var i = 0; i < this.buttons.length; i++) {
+			this.buttons[i].Clear();
+		}
 	}
 }
 
