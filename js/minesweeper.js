@@ -171,7 +171,7 @@ class Board {
 		ctx.fillStyle = "#C8C8C8";
 		ctx.fillRect(this.leftX, this.topY, this.width, this.height);
 
-		ctx.strokeStyle = "#000000"; // outline
+		ctx.strokeStyle = "#D0D0D0"; // outline
 		ctx.lineWidth = 2;
 		ctx.beginPath();
 		ctx.moveTo(this.leftX - 1, this.topY - 1);
@@ -257,6 +257,7 @@ class Board {
 				this.UncoverMines();
 				setTimeout(function(){
 					alert("You Lose");
+					resetButton.Draw();
 				}, 0);
 				return true;
 			}
@@ -265,6 +266,7 @@ class Board {
 			if (this.numCovered <= this.numOfMines) {
 				setTimeout(function(){
 					alert("You Win");
+					resetButton.Draw();
 				}, 0);
 				return true;
 			}
@@ -348,14 +350,14 @@ resetButton = new Button(400, 300, 200, 120, "Reset", "#00FF00", "#000000");
 
 myBoard = MakeBoard("medium", "medium");
 
-selectSize = new Selector("#808080", "#000000", "#FF0000");
+selectSize = new Selector("#808080", "#D0D0D0", "#FF0000");
 selectSize.AddButton(450, 10, 100, 50, "medium");
 selectSize.AddButton(230, 10, 100, 50, "tiny");
 selectSize.AddButton(340, 10, 100, 50, "small");
 selectSize.AddButton(560, 10, 100, 50, "large");
 selectSize.AddButton(670, 10, 100, 50, "huge");
 
-selectDiff = new Selector("#808080", "#000000", "#FF0000");
+selectDiff = new Selector("#808080", "#D0D0D0", "#FF0000");
 selectDiff.AddButton(450, 70, 100, 50, "medium");
 selectDiff.AddButton(230, 70, 100, 50, "novice");
 selectDiff.AddButton(340, 70, 100, 50, "easy");
@@ -400,7 +402,6 @@ c.addEventListener('click', function(event) { // left click
 			if (myBoard.ClickUncover(screenX, screenY)) {
 		    	console.log("game over.");
 		    	gameOver = true;
-		    	resetButton.Draw();
 		    }
 		}
 	}
