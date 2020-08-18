@@ -48,6 +48,41 @@ class Button {
 	}	
 }
 
+class Selector {
+	constructor (color, borderColor, selectColor) {
+		this.color = color;
+		this.borderColor = borderColor;
+		this.selectColor = selectColor;
+		this.buttons = [];
+		this.selected = -1;
+	}
+	AddButton (x, y, width, height, label) {
+		if (this.buttons.length == 0) {
+			this.buttons.push(new Button(x, y, width, height, label, this.color, this.selectColor));
+			this.selected = 0;
+		}
+		else {
+			this.buttons.push(new Button(x, y, width, height, label, this.color, this.borderColor));
+		}
+	}
+	GetSelected () {
+		if (this.selected == -1)
+			return "";
+		return this.buttons[this.selected].GetLabel();
+	}
+	clicked (pointerX, pointerY) {
+		for (var i = 0; i < this.buttons.length; i++) {
+			if (this.buttons[i].Clicked(pointerX, pointerY)) {
+				this.buttons[this.selected].SetBorder(this.borderColor);
+				this.selected = i;
+				this.buttons[i].SetBorder(this.selectColor);
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
 class Board {
 	constructor(squaresX, squaresY, leftX, topY, squareSize) {
 		this.numColors = ["#000000", "#0000FF", "#20B000", "#FF0000", "#B000B0", "#B01010", "#40E0D0", "#000000", "#606060"];
