@@ -70,7 +70,7 @@ class Selector {
 			return "";
 		return this.buttons[this.selected].GetLabel();
 	}
-	clicked (pointerX, pointerY) {
+	Clicked (pointerX, pointerY) {
 		for (var i = 0; i < this.buttons.length; i++) {
 			if (this.buttons[i].Clicked(pointerX, pointerY)) {
 				this.buttons[this.selected].SetBorder(this.borderColor);
@@ -84,28 +84,29 @@ class Selector {
 }
 
 class Board {
-	constructor(squaresX, squaresY, leftX, topY, squareSize) {
+	constructor(squaresX, squaresY, leftX, topY, squareSize, diff) {
 		this.numColors = ["#000000", "#0000FF", "#20B000", "#FF0000", "#B000B0", "#B01010", "#40E0D0", "#000000", "#606060"];
 		this.squaresX = squaresX;
 		this.squaresY = squaresY;
 		this.leftX = leftX;
 		this.topY = topY;
+		this.squareSize = squareSize;
+		this.diff = diff;
 		this.width = squaresX * squareSize;
 		this.height = squaresY * squareSize;
-		this.squareSize = squareSize;
 		this.numCovered = squaresX * squaresY;
-		this.PlaceBombs(1);
+		this.PlaceBombs();
 		this.CreateNums();
 		this.MakeCover();
 		this.Draw();
 	}
-	PlaceBombs(diff) { // diff should range from 1 to 5
+	PlaceBombs() { // diff should range from 1 to 5
 		this.squareValue = [];
 		this.numOfMines = 0;
 		for (var x = 0; x < this.squaresX; x++) {
 			var tempCol = [];
 			for (var y = 0; y < this.squaresY; y++) {
-				if (Math.random() * (25 + diff) > 23) {
+				if (Math.random() * (25 + this.diff) > 23) {
 					tempCol.push(-1);
 					this.numOfMines++;
 				}
@@ -305,9 +306,54 @@ class Board {
 	}
 }
 
-myBoard = new Board(36, 16, 50, 50, 25);
-// myBoard = new Board(18, 8, 50, 50, 50);
+function MakeBoard(size, level) {
+	var sizeVals = [[12, 8, 158, 130, 57], [16, 10, 140, 130, 45], [30, 17, 95, 130, 27], [36, 20, 86, 130, 23], [48, 24, 44, 130, 19]];
+	var i;
+	var diff;
+	if (size == "tiny")
+		i = 0;
+	else if (size == "small")
+		i = 1;
+	else if (size == "medium")
+		i = 2;
+	else if (size == "large")
+		i = 3;
+	else
+		i = 4;
+	if (level == "novice")
+		diff = 1;
+	else if (level == "easy")
+		diff = 2;
+	else if (level == "medium")
+		diff = 3;
+	else if (level == "hard")
+		diff = 4;
+	else
+		diff = 5;
+	return new Board(sizeVals[i][0], sizeVals[i][1], sizeVals[i][2], sizeVals[i][3], sizeVals[i][4], diff);
+}
+
+myBoard = MakeBoard("medium", "medium");
+
+selectSize = new Selector("#808080", "#000000", "#FF0000");
+selectSize.AddButton(450, 10, 100, 50, "medium");
+selectSize.AddButton(230, 10, 100, 50, "tiny");
+selectSize.AddButton(340, 10, 100, 50, "small");
+selectSize.AddButton(560, 10, 100, 50, "large");
+selectSize.AddButton(670, 10, 100, 50, "huge");
+
+selectDiff = new Selector("#808080", "#000000", "#FF0000");
+selectDiff.AddButton(450, 70, 100, 50, "medium");
+selectDiff.AddButton(230, 70, 100, 50, "novice");
+selectDiff.AddButton(340, 70, 100, 50, "easy");
+selectDiff.AddButton(560, 70, 100, 50, "hard");
+selectDiff.AddButton(670, 70, 100, 50, "expert");
+
+// startButton = new Button(560, 10, 110, 110, "Start", "#00FF00", "#000000");
+
 var gameOver = false;
+
+
 
 c.addEventListener('click', function(event) { // left click
 	if (gameOver)
