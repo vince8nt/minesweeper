@@ -257,7 +257,6 @@ class Board {
 				this.UncoverMines();
 				setTimeout(function(){
 					alert("You Lose");
-					myBoard.Clear();
 				}, 0);
 				return true;
 			}
@@ -266,7 +265,6 @@ class Board {
 			if (this.numCovered <= this.numOfMines) {
 				setTimeout(function(){
 					alert("You Win");
-					myBoard.Clear();
 				}, 0);
 				return true;
 			}
@@ -346,6 +344,8 @@ function MakeBoard(size, level) {
 	return new Board(sizeVals[i][0], sizeVals[i][1], sizeVals[i][2], sizeVals[i][3], sizeVals[i][4], diff);
 }
 
+resetButton = new Button(400, 300, 200, 120, "Reset", "#00FF00", "#000000");
+
 myBoard = MakeBoard("medium", "medium");
 
 selectSize = new Selector("#808080", "#000000", "#FF0000");
@@ -362,33 +362,59 @@ selectDiff.AddButton(340, 70, 100, 50, "easy");
 selectDiff.AddButton(560, 70, 100, 50, "hard");
 selectDiff.AddButton(670, 70, 100, 50, "expert");
 
-// startButton = new Button(560, 10, 110, 110, "Start", "#00FF00", "#000000");
+startButton = new Button(440, 300, 120, 120, "Start", "#00FF00", "#000000");
 
 var gameOver = false;
-
+var inMenu = true;
 
 
 c.addEventListener('click', function(event) { // left click
-	if (gameOver)
-		return;
 	event.preventDefault();
 	var screenX = event.pageX - c.offsetLeft - c.clientLeft;
     var screenY = event.pageY - c.offsetTop - c.clientTop;
-    if (myBoard.ClickUncover(screenX, screenY)) {
-    	console.log("game over.");
-    	gameOver = true;
-    }
+	if (inMenu) {
+		if (selectSize.Clicked(screenX, screenY) || selectDiff.Clicked(screenX, screenY)) {
+			myBoard.Clear();
+			myBoard = MakeBoard(selectSize.GetSelected(), selectDiff.GetSelected());
+			startButton.Draw();
+		}
+		else if (startButton.Clicked(screenX, screenY)) {
+			inMenu = false;
+			selectSize.Clear();
+			selectDiff.Clear();
+			myBoard.Draw();
+		}
+	}
+	else {
+		if (gameOver) {
+		    if (resetButton.Clicked(screenX, screenY)) {
+		    	gameOver = false;
+		    	inMenu = true;
+		    	myBoard = MakeBoard(selectSize.GetSelected(), selectDiff.GetSelected());
+		    	selectSize.Draw();
+				selectDiff.Draw();
+				startButton.Draw();
+		    }
+		}
+		else {
+			if (myBoard.ClickUncover(screenX, screenY)) {
+		    	console.log("game over.");
+		    	gameOver = true;
+		    	resetButton.Draw();
+		    }
+		}
+	}
     return false;
 }, false);
 
 c.addEventListener('contextmenu', function(event) {
-	if (gameOver)
-		return;
-	event.preventDefault();
-	var screenX = event.pageX - c.offsetLeft - c.clientLeft;
-    var screenY = event.pageY - c.offsetTop - c.clientTop;
-    myBoard.ClickFlag(screenX, screenY);
-    return false;
+	if (!gameOver && !inMenu) {
+		event.preventDefault();
+		var screenX = event.pageX - c.offsetLeft - c.clientLeft;
+	    var screenY = event.pageY - c.offsetTop - c.clientTop;
+	    myBoard.ClickFlag(screenX, screenY);
+	    return false;
+	}
 }, false);
 
 
